@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeSpinGame.Infrastructure
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeSpinGame.Application.UnitTets", "tests\FreeSpinGame.Application.UnitTets\FreeSpinGame.Application.UnitTets.csproj", "{E2B89D8B-C095-46D4-AA22-CE8761D5465D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeSpinGame.UnitTets", "tests\FreeSpinGame.UnitTets\FreeSpinGame.UnitTets.csproj", "{E2B89D8B-C095-46D4-AA22-CE8761D5465D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

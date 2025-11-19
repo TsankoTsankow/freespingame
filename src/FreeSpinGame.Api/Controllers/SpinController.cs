@@ -10,6 +10,9 @@ namespace FreeSpinGame.Api.Controllers;
 public class SpinController (IMediator mediator) : ControllerBase
 {
     [HttpPost("spin")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Spin(string campaignId, string playerId)
     {
         var command = new SpinCommand(campaignId, playerId);
@@ -18,6 +21,8 @@ public class SpinController (IMediator mediator) : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetPlayerSpinStatus(string campaignId, string playerId)
     {
         var query = new GetStatusQuery(campaignId, playerId);
