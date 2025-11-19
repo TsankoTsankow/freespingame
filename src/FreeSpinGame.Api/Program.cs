@@ -39,6 +39,7 @@ using (var scope = app.Services.CreateScope())
     if (!db.Campaigns.Any())
     {
         db.Campaigns.Add(new Campaign("1", 2));
+        db.Campaigns.Add(new Campaign("2", 3));
         db.SaveChanges();
     }
 }

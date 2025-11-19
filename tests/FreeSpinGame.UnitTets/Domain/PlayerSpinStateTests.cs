@@ -6,14 +6,15 @@ namespace FreeSpinGame.Application.UnitTets.Domain;
 
 public class PlayerSpinStateTests
 {
-    private readonly string _campaignId = "1";
-    private readonly string _playerId = "1";
-    private readonly int _maxSpinCount = 3;
+    private const string _campaignId = "1";
+    private const string _playerId = "1";
+    private const int _maxSpinCount = 3;
+    private PlayerSpinState CreatePlayerSpinState() => new PlayerSpinState(_campaignId, _playerId);
     
     [Fact]
     public void IncrementSpinCount_ShouldIncreaseCount_WhenBelowLimit()
     {
-        var playerSpinState = new PlayerSpinState(_campaignId, _playerId);
+        var playerSpinState = CreatePlayerSpinState();
         
         playerSpinState.IncrementSpinCount(_maxSpinCount);
         
@@ -23,7 +24,7 @@ public class PlayerSpinStateTests
     [Fact]
     public void IncrementSpinCount_ShouldThrowException_WhenLimitReached()
     {
-        var playerSpinState = new PlayerSpinState(_campaignId, _playerId);
+        var playerSpinState = CreatePlayerSpinState();
 
         int maxSpinCount = 1;
         
@@ -35,7 +36,7 @@ public class PlayerSpinStateTests
     [Fact]
     public void IncrementSpinCount_ShouldRotateConcurrencyKey()
     {
-        var playerSpinState = new PlayerSpinState(_campaignId, _playerId);
+        var playerSpinState = CreatePlayerSpinState();
 
         var oldKey = playerSpinState.ConcurrencyKey;
         
