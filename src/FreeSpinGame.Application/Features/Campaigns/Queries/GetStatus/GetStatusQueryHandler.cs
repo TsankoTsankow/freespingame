@@ -1,4 +1,5 @@
 using FreeSpinGame.Application.Common.Interfaces;
+using FreeSpinGame.Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,8 @@ public class GetStatusQueryHandler (IAppDbContext context) : IRequestHandler<Get
         var campaign = await context.Campaigns
             .AsNoTracking()
             .FirstOrDefaultAsync(c => c.Id == request.CampaignId, cancellationToken);
+        
+        if (campaign is null) throw new EntityNotFoundException("Campaign", request.CampaignId);
 
         int maxSpins = campaign?.MaxSpinsPerPlayer ?? 0;
 
@@ -21,8 +24,8 @@ public class GetStatusQueryHandler (IAppDbContext context) : IRequestHandler<Get
             .FirstOrDefaultAsync(cancellationToken);
 
         return new PlayerSpinStatusViewModel(
-            request.CampaignId,
             request.PlayerId,
+            request.CampaignId,
             currentSpinCount,
             maxSpins);
     }

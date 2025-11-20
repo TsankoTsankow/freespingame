@@ -15,7 +15,7 @@ public class SpinController (IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Spin(string campaignId, string playerId)
     {
-        var command = new SpinCommand(campaignId, playerId);
+        var command = new SpinCommand(playerId, campaignId);
         var result = await mediator.Send(command);
         return Ok(new {count = result.CurrentSpinCount});
     }

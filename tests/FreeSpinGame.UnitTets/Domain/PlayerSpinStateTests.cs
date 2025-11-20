@@ -6,42 +6,54 @@ namespace FreeSpinGame.Application.UnitTets.Domain;
 
 public class PlayerSpinStateTests
 {
-    private const string _campaignId = "1";
-    private const string _playerId = "1";
-    private const int _maxSpinCount = 3;
-    private PlayerSpinState CreatePlayerSpinState() => new PlayerSpinState(_campaignId, _playerId);
+    private const string PlayerId = "1";
+    private const string CampaignId = "2";
+    private const int MaxSpinCount = 3;
+    private PlayerSpinState CreatePlayerSpinState() => new PlayerSpinState(PlayerId, CampaignId);
     
     [Fact]
     public void IncrementSpinCount_ShouldIncreaseCount_WhenBelowLimit()
     {
+        //Arrange
         var playerSpinState = CreatePlayerSpinState();
         
-        playerSpinState.IncrementSpinCount(_maxSpinCount);
+        //Act
+        playerSpinState.IncrementSpinCount(MaxSpinCount);
         
+        
+        //Assert
         Assert.Equal(1, playerSpinState.SpinCount);
     }
 
     [Fact]
     public void IncrementSpinCount_ShouldThrowException_WhenLimitReached()
     {
+        //Arrange
         var playerSpinState = CreatePlayerSpinState();
 
         int maxSpinCount = 1;
         
-        playerSpinState.IncrementSpinCount(_maxSpinCount);
+        //Act
+        playerSpinState.IncrementSpinCount(MaxSpinCount);
         
+        
+        //Assert
         Assert.Throws<SpinLimitReachedException>(() => playerSpinState.IncrementSpinCount(maxSpinCount));
     }
 
     [Fact]
     public void IncrementSpinCount_ShouldRotateConcurrencyKey()
     {
+        //Arrange
         var playerSpinState = CreatePlayerSpinState();
 
         var oldKey = playerSpinState.ConcurrencyKey;
         
-        playerSpinState.IncrementSpinCount(_maxSpinCount);
+        //Act
+        playerSpinState.IncrementSpinCount(MaxSpinCount);
         
+        
+        //Assert
         Assert.NotEqual(oldKey, playerSpinState.ConcurrencyKey);
     }
 }

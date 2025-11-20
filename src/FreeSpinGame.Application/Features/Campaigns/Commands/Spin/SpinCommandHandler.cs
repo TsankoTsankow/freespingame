@@ -23,11 +23,11 @@ public class SpinCommandHandler (ISpinRepository repository) : IRequestHandler<S
 
                 if (campaign is null) throw new  EntityNotFoundException("Campaign", request.CampaignId);
 
-                var playerSpinState = await repository.GetPlayerSpinStateAsync(request.CampaignId, request.PlayerId);
+                var playerSpinState = await repository.GetPlayerSpinStateAsync(request.PlayerId, request.CampaignId);
 
                 if (playerSpinState is null)
                 {
-                    playerSpinState = new PlayerSpinState(request.CampaignId, request.PlayerId);
+                    playerSpinState = new PlayerSpinState(request.PlayerId, request.CampaignId);
                     repository.AddPlayerSpinState(playerSpinState);
                 }
 

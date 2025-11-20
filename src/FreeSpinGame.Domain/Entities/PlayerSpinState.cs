@@ -4,18 +4,18 @@ namespace FreeSpinGame.Domain.Entities;
 
 public class PlayerSpinState
 {
-    public string CampaignId  { get; private set; }
     public string PlayerId { get; private set; }
+    public string CampaignId  { get; private set; }
     public int SpinCount { get; private set; }
     public Guid ConcurrencyKey { get; private set; }
 
-    public PlayerSpinState(string campaignId, string playerId)
+    public PlayerSpinState(string playerId, string campaignId)
     {
-        if (string.IsNullOrWhiteSpace(campaignId)) throw new ArgumentNullException(nameof(campaignId));
         if (string.IsNullOrWhiteSpace(playerId)) throw new ArgumentNullException(nameof(playerId));
+        if (string.IsNullOrWhiteSpace(campaignId)) throw new ArgumentNullException(nameof(campaignId));
         
-        CampaignId = campaignId;
         PlayerId = playerId;
+        CampaignId = campaignId;
         SpinCount = 0;
         ConcurrencyKey = Guid.NewGuid();
     }

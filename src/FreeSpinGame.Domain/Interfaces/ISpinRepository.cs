@@ -5,7 +5,7 @@ namespace FreeSpinGame.Domain.Interfaces;
 public interface ISpinRepository
 {
     Task<Campaign?> GetCampaignAsync(string campaignId);
-    Task<PlayerSpinState?> GetPlayerSpinStateAsync(string campaignId, string playerId);
+    Task<PlayerSpinState?> GetPlayerSpinStateAsync(string playerId, string campaignId);
     
     void AddPlayerSpinState(PlayerSpinState playerSpinState);
     void ClearChangeTrackers();

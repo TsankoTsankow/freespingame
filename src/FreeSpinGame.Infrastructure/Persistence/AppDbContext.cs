@@ -17,7 +17,7 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<Campaign>().HasKey(c => c.Id);
         
         var stateBuilder = modelBuilder.Entity<PlayerSpinState>();
-        stateBuilder.HasKey(c => new { c.CampaignId, c.PlayerId });
+        stateBuilder.HasKey(c => new { c.PlayerId, c.CampaignId });
         stateBuilder.Property(p => p.ConcurrencyKey).IsConcurrencyToken();
         
         modelBuilder.Entity<SpinLog>().HasKey(sl => sl.Id);

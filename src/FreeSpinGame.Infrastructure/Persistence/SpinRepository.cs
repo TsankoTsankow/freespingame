@@ -10,9 +10,9 @@ public class SpinRepository (AppDbContext context) : ISpinRepository
         return await context.Campaigns.FindAsync(campaignId);
     }
 
-    public async Task<PlayerSpinState?> GetPlayerSpinStateAsync(string campaignId, string playerId)
+    public async Task<PlayerSpinState?> GetPlayerSpinStateAsync(string playerId, string campaignId )
     {
-        return await context.PlayerSpinStates.FindAsync(campaignId, playerId);
+        return await context.PlayerSpinStates.FindAsync(playerId, campaignId);
     }
 
     public void AddPlayerSpinState(PlayerSpinState playerSpinState)
