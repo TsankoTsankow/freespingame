@@ -23,12 +23,63 @@ public class SpinCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldCreateNewPlayerSpinState_WhenUserParticipatesFirstTime()
+    {
+        //Arrange
+        var command = new SpinCommand(PlayerId, CampaignId);
+        var campaign = new Campaign(CampaignId, MaxSpinCount);
+        
+        A.CallTo(() => _fakeRepository.GetCampaignAsync(CampaignId))
+            .Returns(campaign);
+        A.CallTo(() => _fakeRepository.GetPlayerSpinStateAsync(PlayerId, CampaignId))
+            .Returns((PlayerSpinState?)null);
+        
+        //Act
+        var result = await _sut.Handle(command, CancellationToken.None);
+        
+        //Assert
+        Assert.Equal(1, result.CurrentSpinCount);
+
+        A.CallTo(() => _fakeRepository.AddPlayerSpinState(A<PlayerSpinState>.Ignored))
+            .MustHaveHappenedOnceExactly();
+        
+        A.CallTo(() => _fakeRepository.AddSpinLog(A<SpinLog>.Ignored))
+            .MustHaveHappenedOnceExactly();
+
+        A.CallTo(() => _fakeRepository.SaveChangesAsync())
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Fact]
+    public async Task Handle_ShoulThrowException_WhenMaxLimitReached()
+    {
+        //Arrange
+        var command = new SpinCommand(PlayerId, CampaignId);
+        var campaign = new Campaign(CampaignId, MaxSpinCount);
+        
+        A.CallTo(() => _fakeRepository.GetCampaignAsync(CampaignId))
+            .Returns(campaign);
+        
+        var playerspinstate = new PlayerSpinState(PlayerId, CampaignId);
+        for(int i=0; i < MaxSpinCount; i++) playerspinstate.IncrementSpinCount(10);
+        
+        A.CallTo(() => _fakeRepository.GetPlayerSpinStateAsync(PlayerId, CampaignId))
+            .Returns(playerspinstate);
+        
+        //Act and assert
+        await Assert.ThrowsAsync<SpinLimitReachedException>(async () => 
+            await _sut.Handle(command, CancellationToken.None));
+        
+        A.CallTo(() => _fakeRepository.SaveChangesAsync())
+            .MustNotHaveHappened();
+    }
+
+    [Fact]
     public async Task Handle_ShouldRetry_WhenConcurrencyExceptionOccurs()
     {
         //Arrange
         var command = new SpinCommand(PlayerId, CampaignId);
         var campaign = new Campaign(CampaignId, MaxSpinCount);
-        var state = new PlayerSpinState(PlayerId, CampaignId);
         
         A.CallTo(() => _fakeRepository.GetCampaignAsync(CampaignId))
             .Returns(campaign);
