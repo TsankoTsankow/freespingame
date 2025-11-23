@@ -60,8 +60,8 @@ public class SpinCommandHandlerTests
         A.CallTo(() => _fakeRepository.GetCampaignAsync(CampaignId))
             .Returns(campaign);
         
-        var playerspinstate = new PlayerSpinState(PlayerId, CampaignId);
-        for(int i=0; i < MaxSpinCount; i++) playerspinstate.IncrementSpinCount(10);
+        var playerspinstate = new PlayerSpinState(PlayerId, CampaignId, MaxSpinCount);
+        for(int i=0; i < MaxSpinCount; i++) playerspinstate.IncrementSpinCount();
         
         A.CallTo(() => _fakeRepository.GetPlayerSpinStateAsync(PlayerId, CampaignId))
             .Returns(playerspinstate);
@@ -84,7 +84,7 @@ public class SpinCommandHandlerTests
         A.CallTo(() => _fakeRepository.GetCampaignAsync(CampaignId))
             .Returns(campaign);
         A.CallTo(() => _fakeRepository.GetPlayerSpinStateAsync(PlayerId, CampaignId))
-            .ReturnsLazily(() => new PlayerSpinState(PlayerId, CampaignId));
+            .ReturnsLazily(() => new PlayerSpinState(PlayerId, CampaignId, MaxSpinCount));
         A.CallTo(() => _fakeRepository.SaveChangesAsync())
             .ThrowsAsync(new DbUpdateConcurrencyException()).Once()
             .Then

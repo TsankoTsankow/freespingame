@@ -19,19 +19,20 @@ public class SpinCommandHandler (ISpinRepository repository) : IRequestHandler<S
             
             try
             {
-                var campaign = await repository.GetCampaignAsync(request.CampaignId);
-
-                if (campaign is null) throw new  EntityNotFoundException("Campaign", request.CampaignId);
-
                 var playerSpinState = await repository.GetPlayerSpinStateAsync(request.PlayerId, request.CampaignId);
 
                 if (playerSpinState is null)
                 {
-                    playerSpinState = new PlayerSpinState(request.PlayerId, request.CampaignId);
+                    var campaign = await repository.GetCampaignAsync(request.CampaignId);
+                    
+                    if (campaign is null) throw new  EntityNotFoundException("Campaign", request.CampaignId);
+                    
+                    playerSpinState = new PlayerSpinState(request.PlayerId, request.CampaignId, campaign.MaxSpinsPerPlayer);
+                    
                     repository.AddPlayerSpinState(playerSpinState);
                 }
 
-                playerSpinState.IncrementSpinCount(campaign.MaxSpinsPerPlayer);
+                playerSpinState.IncrementSpinCount();
 
                 var spinLog = new SpinLog(request.CampaignId, request.PlayerId);
                 repository.AddSpinLog(spinLog);

@@ -9,7 +9,7 @@ public class PlayerSpinStateTests
     private const string PlayerId = "1";
     private const string CampaignId = "2";
     private const int MaxSpinCount = 3;
-    private PlayerSpinState CreatePlayerSpinState() => new PlayerSpinState(PlayerId, CampaignId);
+    private PlayerSpinState CreatePlayerSpinState() => new PlayerSpinState(PlayerId, CampaignId, MaxSpinCount);
     
     [Fact]
     public void IncrementSpinCount_ShouldIncreaseCount_WhenBelowLimit()
@@ -18,7 +18,7 @@ public class PlayerSpinStateTests
         var playerSpinState = CreatePlayerSpinState();
         
         //Act
-        playerSpinState.IncrementSpinCount(MaxSpinCount);
+        playerSpinState.IncrementSpinCount();
         
         
         //Assert
@@ -29,16 +29,13 @@ public class PlayerSpinStateTests
     public void IncrementSpinCount_ShouldThrowException_WhenLimitReached()
     {
         //Arrange
-        var playerSpinState = CreatePlayerSpinState();
+        var playerSpinState = new PlayerSpinState(PlayerId, CampaignId, 1);
 
-        int maxSpinCount = 1;
-        
         //Act
-        playerSpinState.IncrementSpinCount(MaxSpinCount);
-        
+        playerSpinState.IncrementSpinCount();
         
         //Assert
-        Assert.Throws<SpinLimitReachedException>(() => playerSpinState.IncrementSpinCount(maxSpinCount));
+        Assert.Throws<SpinLimitReachedException>(() => playerSpinState.IncrementSpinCount());
     }
 
     [Fact]
@@ -50,8 +47,7 @@ public class PlayerSpinStateTests
         var oldKey = playerSpinState.ConcurrencyKey;
         
         //Act
-        playerSpinState.IncrementSpinCount(MaxSpinCount);
-        
+        playerSpinState.IncrementSpinCount();
         
         //Assert
         Assert.NotEqual(oldKey, playerSpinState.ConcurrencyKey);

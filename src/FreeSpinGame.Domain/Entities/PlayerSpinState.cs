@@ -7,9 +7,10 @@ public class PlayerSpinState
     public string PlayerId { get; private set; }
     public string CampaignId  { get; private set; }
     public int SpinCount { get; private set; }
+    public int MaxSpinCount { get; private set; }
     public Guid ConcurrencyKey { get; private set; }
 
-    public PlayerSpinState(string playerId, string campaignId)
+    public PlayerSpinState(string playerId, string campaignId, int maxSpinCount)
     {
         if (string.IsNullOrWhiteSpace(playerId)) throw new ArgumentNullException(nameof(playerId));
         if (string.IsNullOrWhiteSpace(campaignId)) throw new ArgumentNullException(nameof(campaignId));
@@ -17,6 +18,7 @@ public class PlayerSpinState
         PlayerId = playerId;
         CampaignId = campaignId;
         SpinCount = 0;
+        MaxSpinCount = maxSpinCount;
         ConcurrencyKey = Guid.NewGuid();
     }
 
@@ -24,9 +26,9 @@ public class PlayerSpinState
     {
     }
 
-    public void IncrementSpinCount(int maxNumberOfSpins)
+    public void IncrementSpinCount()
     {
-        if (SpinCount >= maxNumberOfSpins)
+        if (SpinCount >= MaxSpinCount)
         {
             throw new SpinLimitReachedException(PlayerId, CampaignId);
         }
